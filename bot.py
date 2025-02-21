@@ -118,10 +118,11 @@ def request_program_to_close(message):
         bot.send_message(message.chat.id, "Введіть назву програми для закриття:")
         bot.register_next_step_handler(message, close_program)
 
+# Закриття програми (Linux/Mac)
 def close_program(message):
     if is_admin(message):
         try:
-            os.system(f"taskkill /f /im {message.text}")
+            os.system(f"pkill -f {message.text}")  # Use pkill instead of taskkill
             bot.send_message(message.chat.id, f"✅ Програму {message.text} закрито.")
         except Exception as e:
             bot.send_message(message.chat.id, f"❌ Помилка: {str(e)}")
@@ -164,12 +165,12 @@ def restart_computer(message):
         bot.send_message(message.chat.id, "🔄 Перезавантажую комп'ютер...")
         os.system('shutdown /r /t 1')
 
-# Вимкнення комп'ютера
+# Вимкнення комп'ютера (Linux/Mac)
 @bot.message_handler(func=lambda message: message.text == "⚠️ Вимкнути")
 def shutdown_computer(message):
     if is_admin(message):
-        bot.send_message(message.chat.id, "❗ Вимикаю комп'ютер...")
-        os.system('shutdown /s /t 1')
+        bot.send_message(message.chat.id, "🔴 Вимикаю комп'ютер...")
+        os.system("sudo shutdown -h now")  # For Linux/Mac
 
 # === Запуск бота ===
 if __name__ == "__main__":
