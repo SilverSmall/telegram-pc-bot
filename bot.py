@@ -6,7 +6,7 @@ import time
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 # === Налаштування ===
-TOKEN = 'your_token_here'
+TOKEN = '7248122948:AAGZkQ5mK69HibnJfStldnd9FzsAgCk_ffA'
 ADMIN_ID = 877365085  # Замініть на свій Telegram ID
 bot = telebot.TeleBot(TOKEN)
 
