@@ -2,7 +2,6 @@ import telebot
 import os
 import subprocess
 import psutil
-import pyautogui
 import time
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
