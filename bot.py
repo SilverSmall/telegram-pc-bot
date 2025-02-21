@@ -164,6 +164,13 @@ def restart_computer(message):
         bot.send_message(message.chat.id, "🔄 Перезавантажую комп'ютер...")
         os.system('shutdown /r /t 1')
 
+# Вимкнення комп'ютера
+@bot.message_handler(func=lambda message: message.text == "⚠️ Вимкнути")
+def shutdown_computer(message):
+    if is_admin(message):
+        bot.send_message(message.chat.id, "❗ Вимикаю комп'ютер...")
+        os.system('shutdown /s /t 1')
+
 # === Запуск бота ===
 if __name__ == "__main__":
     print("Даров бандіти!")  # Виводиться при запуску бота
