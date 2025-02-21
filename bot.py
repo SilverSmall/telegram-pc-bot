@@ -2,6 +2,7 @@ import telebot
 import os
 import subprocess
 import psutil
+from wakeonlan import send_magic_packet
 import time
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
@@ -29,6 +30,37 @@ def main_menu():
     ]
     markup.add(*buttons)
     return markup
+
+@bot.message_handler(func=lambda message: message.text == "💡 Увімкнути комп'ютер")
+def wake_computer(message):
+    if is_admin(message):
+        bot.send_message(message.chat.id, "Введіть MAC-адресу комп'ютера для пробудження (формат: XX:XX:XX:XX:XX:XX):")
+        bot.register_next_step_handler(message, send_wake_packet)
+
+def send_wake_packet(message):
+    if is_admin(message):
+        try:
+            mac_address = message.text.strip()
+            send_magic_packet(mac_address)
+            bot.send_message(message.chat.id, f"✅ Відправлено сигнал для пробудження ПК з MAC-адресою {mac_address}.")
+        except Exception as e:
+            bot.send_message(message.chat.id, f"❌ Помилка: {str(e)}")
+            
+@bot.message_handler(func=lambda message: message.text == "🔍 Перегляд процесів")
+def list_processes(message):
+    if is_admin(message):
+        processes = [p.info for p in psutil.process_iter(attrs=['pid', 'name'])]
+        process_list = "\n".join([f"{p['pid']} - {p['name']}" for p in processes])
+        bot.send_message(message.chat.id, f"🔄 Список процесів:\n{process_list}")
+
+
+@bot.message_handler(func=lambda message: message.text == "ℹ️ Інформація про ПК")
+def system_info(message):
+    if is_admin(message):
+        cpu = psutil.cpu_percent()
+        ram = psutil.virtual_memory().percent
+        disk = psutil.disk_usage('/').percent
+        bot.send_message(message.chat.id, f"💻 CPU: {cpu}%\n🖥 RAM: {ram}%\n💾 Диск: {disk}%")
 
 @bot.message_handler(commands=['start'])
 def start(message):
