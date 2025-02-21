@@ -2,3 +2,4 @@ pyTelegramBotAPI
 pyautogui
 psutil
 pillow
+wakeonlan
