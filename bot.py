@@ -5,6 +5,7 @@ import psutil
 from wakeonlan import send_magic_packet
 import time
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from threading import Thread
 
 # === Налаштування ===
 TOKEN = '7248122948:AAGZkQ5mK69HibnJfStldnd9FzsAgCk_ffA'
@@ -133,7 +134,35 @@ def mute_volume(message):
         subprocess.call(["amixer", "set", "Master", "mute"])  # Вимкнути звук
         bot.send_message(message.chat.id, "🔇 Звук вимкнено.")
 
-# Інші функції залишаються без змін...
+@bot.message_handler(func=lambda message: message.text == "🔄 Перезавантажити")
+def restart_computer(message):
+    if is_admin(message):
+        bot.send_message(message.chat.id, "🔄 Перезавантажую комп'ютер...")
+        os.system('shutdown /r /t 1')
+
+    
+        shutdown_thread = None
+
+@bot.message_handler(func=lambda message: message.text == "⏲️ Таймер вимкнення")
+def shutdown_timer(message):
+    if is_admin(message):
+        bot.send_message(message.chat.id, "Введіть час до вимкнення (в хвилинах):")
+        bot.register_next_step_handler(message, set_shutdown_timer)
+
+def set_shutdown_timer(message):
+    if is_admin(message):
+        try:
+            timer = int(message.text)
+            bot.send_message(message.chat.id, f"Таймер вимкнення встановлено на {timer} хвилин.")
+            global shutdown_thread
+            shutdown_thread = Thread(target=shutdown_in, args=(timer,))
+            shutdown_thread.start()
+        except ValueError:
+            bot.send_message(message.chat.id, "❌ Будь ласка, введіть правильне число.")
+
+def shutdown_in(timer):
+    time.sleep(timer * 60)  # Wait for the specified time
+    os.system('shutdown /s /t 1')  # Shutdown the system
 
 # === Запуск бота ===
 bot.polling(none_stop=True)
