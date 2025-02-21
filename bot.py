@@ -165,4 +165,6 @@ def restart_computer(message):
         os.system('shutdown /r /t 1')
 
 # === Запуск бота ===
-bot.polling(none_stop=True)
+if __name__ == "__main__":
+    print("Даров бандіти!")  # Виводиться при запуску бота
+    bot.polling(none_stop=True)
