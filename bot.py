@@ -1,7 +1,6 @@
 import telebot
 import os
 import subprocess
-import pyautogui
 import psutil
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
