@@ -85,22 +85,20 @@ def sound_menu():
     markup.add(*buttons)
     return markup
 
-@bot.message_handler(func=lambda message: message.text == "🔊 Збільшити гучність")
+
 def increase_volume(message):
     if is_admin(message):
-        subprocess.call(["nircmd.exe", "changesysvolume", "2000"])  # Використовуйте nircmd для керування звуком
+        subprocess.call(["amixer", "set", "Master", "2%+"])  # Збільшити на 2%
         bot.send_message(message.chat.id, "🔊 Гучність збільшено.")
 
-@bot.message_handler(func=lambda message: message.text == "🔉 Зменшити гучність")
 def decrease_volume(message):
     if is_admin(message):
-        subprocess.call(["nircmd.exe", "changesysvolume", "-2000"])
+        subprocess.call(["amixer", "set", "Master", "2%-"])  # Зменшити на 2%
         bot.send_message(message.chat.id, "🔉 Гучність зменшено.")
 
-@bot.message_handler(func=lambda message: message.text == "🔇 Вимкнути звук")
 def mute_volume(message):
     if is_admin(message):
-        subprocess.call(["nircmd.exe", "mutesysvolume", "1"])
+        subprocess.call(["amixer", "set", "Master", "mute"])  # Вимкнути звук
         bot.send_message(message.chat.id, "🔇 Звук вимкнено.")
 
 # Інші функції залишаються без змін...
